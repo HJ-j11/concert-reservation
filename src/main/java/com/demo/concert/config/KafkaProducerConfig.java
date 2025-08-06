@@ -13,7 +13,7 @@ import java.util.*;
 
 @Configuration
 public class KafkaProducerConfig {
- 
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> config = new HashMap<>();
