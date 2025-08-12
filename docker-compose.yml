@@ -34,5 +34,5 @@ services:
       - kafka
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
-      KAFKA_CLUSTERS_0_NAME: wizard_local
+      KAFKA_CLUSTERS_0_NAME: kafka_local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092

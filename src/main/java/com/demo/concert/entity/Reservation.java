@@ -2,8 +2,6 @@ package com.demo.concert.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +14,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Ticket {
+public class Reservation {
     @Id
-    private String ticketId;
-    private LocalDateTime createdAt;
+    private String reservationId;
 }
