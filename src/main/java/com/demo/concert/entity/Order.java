@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class Order {
     @Id
-    private String reservationId;
+    private String orderId;
 }

@@ -1,6 +1,6 @@
 package com.demo.concert.service.kafka;
 
-import com.demo.concert.entity.Reservation;
+import com.demo.concert.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -19,7 +19,10 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
         kafkaTemplate.send(topic, message);
     }
 
-    public void produceReservation(Reservation reservation) {
+    public void produceReservation(Order order) {
+        // Order 객체 만들기
+
         // PaymentConsumer 로 보내기
+        kafkaTemplate.send("order-progress", order.getOrderId());
     }
 }
