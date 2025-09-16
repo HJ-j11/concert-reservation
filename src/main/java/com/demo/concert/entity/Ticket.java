@@ -19,5 +19,6 @@ import lombok.Setter;
 public class Ticket {
     @Id
     private String ticketId;
+    private Long quantity;
     private LocalDateTime createdAt;
 }

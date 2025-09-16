@@ -1,6 +1,6 @@
 package com.demo.concert.controller;
 
-import com.demo.concert.service.kafka.KafkaProducerServiceImpl;
+import com.demo.concert.service.ConcertServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/kafka")
 public class ConcertController {
-    private final KafkaProducerServiceImpl kafkaProducerService;
+    private final ConcertServiceImpl concertService;
 
     @PostMapping("/send")
     public ResponseEntity<?> send(@RequestParam String message) {
-        kafkaProducerService.sendMessage("my-topic", message);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return null;
     }
 }
