@@ -4,6 +4,7 @@ import com.demo.concert.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/concert")
+@RequestMapping("/api/reservations")
 public class ConcertController {
     private final ReservationService reservationService;
 
-    @PostMapping("reserve/{concertId}")
+    @GetMapping("/{concertId}/stock")
+    public ResponseEntity<String> getTicketStock(@PathVariable String concertId) {
+        reservationService.getTicketStock(concertId);
+        return ResponseEntity.status(HttpStatus.OK).body("Ticket is still remained");
+    }
+
+    @PostMapping("/{concertId}")
     public ResponseEntity<String> reserve(
         @PathVariable String concertId,
         @RequestParam String userId) {

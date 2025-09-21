@@ -19,7 +19,6 @@ public class ReservationServiceImpl implements ReservationService {
     Long result = luaScripts.tryReserve(concertId, userId);
 
     if (result == 1L) {
-      // success → send Kafka event
       kafkaTemplate.send("reservation-events", new ReservationEvent(userId, concertId));
       return true;
     } else if (result == -1L) {
@@ -29,5 +28,10 @@ public class ReservationServiceImpl implements ReservationService {
       // stock empty
       return false;
     }
+  }
+
+  @Override
+  public void getTicketStock(String concertId) {
+
   }
 }

@@ -18,7 +18,7 @@ import lombok.Setter;
 @Builder
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String reservationId;
     private String userId;
     private String concertId;
