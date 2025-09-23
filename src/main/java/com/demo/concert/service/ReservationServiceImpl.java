@@ -19,7 +19,7 @@ public class ReservationServiceImpl implements ReservationService {
     Long result = luaScripts.tryReserve(concertId, userId);
 
     if (result == 1L) {
-      kafkaTemplate.send("reservation-events", new ReservationEvent(userId, concertId));
+      kafkaTemplate.send("reservation-events", new ReservationEvent(concertId, userId));
       return true;
     } else if (result == -1L) {
       // already reserved
