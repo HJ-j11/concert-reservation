@@ -41,7 +41,7 @@ class ConcertApplicationTests {
     redisTemplate.delete("concert:1:users");
 
     kafkaTemplate = mock(KafkaTemplate.class);
-    reservationService = new ReservationServiceImpl(redisLuaScript, kafkaTemplate);
+    reservationService = new ReservationServiceImpl(redisLuaScript, kafkaTemplate, redisTemplate);
   }
 
   @Test

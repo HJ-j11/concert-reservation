@@ -5,6 +5,7 @@ import com.demo.concert.dto.ReservationEvent;
 import com.demo.concert.dto.api.ApiResponse;
 import com.demo.concert.dto.api.ReservationRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class ReservationServiceImpl implements ReservationService {
 
   private final RedisLuaScript luaScripts;
   private final KafkaTemplate<String, Object> kafkaTemplate;
+  private final RedisTemplate<String, String> redisTemplate;
 
   public boolean reserve(String concertId, String userId) {
     Long result = luaScripts.tryReserve(concertId, userId);
@@ -31,7 +33,13 @@ public class ReservationServiceImpl implements ReservationService {
   }
 
   @Override
-  public void getTicketStock(String concertId) {
+  public Long getTicketStock(String concertId) {
+    String stockKey = "concert:" + concertId + ":stock";
+    String stockStr = redisTemplate.opsForValue().get(stockKey);
 
+    if(stockStr != null) {
+      return Long.parseLong(stockStr);
+    }
+    return 0L;
   }
 }

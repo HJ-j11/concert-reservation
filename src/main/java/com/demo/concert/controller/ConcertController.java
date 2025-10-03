@@ -1,5 +1,6 @@
 package com.demo.concert.controller;
 
+import com.demo.concert.dto.api.ApiResponse;
 import com.demo.concert.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,14 @@ public class ConcertController {
     private final ReservationService reservationService;
 
     @GetMapping("/{concertId}/stock")
-    public ResponseEntity<String> getTicketStock(@PathVariable String concertId) {
-        reservationService.getTicketStock(concertId);
-        return ResponseEntity.status(HttpStatus.OK).body("Ticket is still remained");
+    public ResponseEntity<ApiResponse<Long>> getTicketStock(@PathVariable String concertId) {
+        Long stock = reservationService.getTicketStock(concertId);
+        ApiResponse<Long> apiResponse = new ApiResponse<>(
+            HttpStatus.OK.value(),
+            "Ticket is still remained",
+            stock
+        );
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/{concertId}")
