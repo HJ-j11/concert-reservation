@@ -5,6 +5,7 @@ import com.demo.concert.dto.LoginRequest;
 import com.demo.concert.dto.api.ApiResponse;
 import com.demo.concert.entity.login.Member;
 import com.demo.concert.service.MemberServiceImpl;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,12 @@ public class MemberController {
   private final JwtProvider jwtProvider;
 
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginRequest request) {
+  public ResponseEntity<ApiResponse<Map<String, String>>> login(@RequestBody LoginRequest request) {
     Member member = memberService.authenticate(request.getUsername(), request.getPassword());
-    String token = jwtProvider.createToken(member.getUsername(), member.getUserRole());
+    String accessToken = jwtProvider.createToken(member.getUsername(), member.getUserRole());
+    String refreshToken = jwtProvider.createRefreshToken(member.getUsername());
 
-    return ResponseEntity.ok(new ApiResponse<>(200, "로그인 성공", token));
+    return ResponseEntity.ok(new ApiResponse<>(200, "로그인 성공",
+        Map.of("accessToken", accessToken, "refreshToken", refreshToken)));
   }
 }

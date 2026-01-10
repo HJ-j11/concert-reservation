@@ -22,13 +22,28 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
   private final Key key;
+  private final Key refreshKey;
   private final long expiration;
 
+  private final long accessTokenValidity = 1000 * 60 * 15; // 15분
+  private final long refreshTokenValidity = 1000L * 60 * 60 * 24 * 7; // 7일
+
+
   public JwtProvider(
-      @Value("${jwt.secret}") String secret,
+      @Value("${jwt.access}") String access,
+      @Value("${jwt.refresh}") String refresh,
       @Value("${jwt.expiration}") long expiration
   ) {
-    this.key = Keys.hmacShaKeyFor(secret.getBytes()); // 최소 32바이트 필요
+    this.key = Keys.hmacShaKeyFor(access.getBytes()); // 최소 32바이트 필요 (HS256)
+    // HS512 requires at least 64 bytes (512 bits) - ensure refresh key meets this requirement
+    byte[] refreshBytes = refresh.getBytes();
+    if (refreshBytes.length < 64) {
+      throw new IllegalArgumentException(
+          "JWT refresh key must be at least 64 bytes (512 bits) for HS512 algorithm. " +
+          "Current key length: " + refreshBytes.length + " bytes"
+      );
+    }
+    this.refreshKey = Keys.hmacShaKeyFor(refreshBytes);
     this.expiration = expiration;
   }
 
@@ -48,6 +63,21 @@ public class JwtProvider {
         .setIssuedAt(now)            // 생성 시간
         .setExpiration(expiryDate)   // 만료 시간
         .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
+  }
+
+  /**
+   * JWT Refresh 토큰 생성
+   *
+   * @param username 사용자 ID 또는 username
+   * @return JWT 문자열
+   */
+  public String createRefreshToken(String username) {
+    return Jwts.builder()
+        .setSubject(username)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidity))
+        .signWith(refreshKey, SignatureAlgorithm.HS512)
         .compact();
   }
 
